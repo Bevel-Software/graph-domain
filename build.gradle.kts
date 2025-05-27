@@ -2,12 +2,40 @@ import com.github.jk1.license.filter.DependencyFilter
 import com.github.jk1.license.render.TextReportRenderer
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 
+// Add buildscript dependency for the Nexus plugin
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("io.github.gradle-nexus:publish-plugin:2.0.0")
+    }
+}
+
 plugins {
     kotlin("jvm") version "2.0.10"
     `maven-publish`
     id("com.github.jk1.dependency-license-report") version "2.9"
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
     signing
+}
+
+// Check if this is a standalone project build
+if (rootProject.name == "graph-domain") {
+    // Apply the Nexus plugin when built as a standalone project
+    apply {
+        plugin("io.github.gradle-nexus.publish-plugin")
+    }
+    
+    // Access the extension directly after applying the plugin
+    configure<io.github.gradlenexus.publishplugin.NexusPublishExtension> {
+        repositories {
+            sonatype {
+                nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+                snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            }
+        }
+    }
 }
 
 licenseReport {
@@ -94,14 +122,4 @@ java {
 // Configure signing
 signing {
     sign(publishing.publications["maven"])
-}
-
-nexusPublishing {
-    repositories {
-        // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
-        sonatype {
-            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-        }
-    }
 }
