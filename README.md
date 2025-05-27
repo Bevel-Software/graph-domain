@@ -215,28 +215,6 @@ This library provides a domain model and services. Actual usage will involve imp
 *   `software.bevel.graph_domain.tokenizers`: Interfaces and implementations for code tokenization.
 *   `software.bevel.graph_domain`: Top-level services like `GraphMergingService` and `Metrics`.
 
-## Project Structure
-
-The main source code resides in `src/main/kotlin/software/bevel/graph_domain/`. Key sub-packages include:
-
-```
-graph-domain/
-├── src/
-│   └── main/
-│       └── kotlin/
-│           └── software/bevel/graph_domain/
-│               ├── graph/                  # Core graph entities (Node, Connection, Graph)
-│               │   └── builder/            # Builders for graph components
-│               ├── hashing/                # Locality Sensitive Hashing interface
-│               ├── parsing/                # Parsing interfaces and helpers
-│               ├── tokenizers/             # Tokenizer interfaces and implementations
-│               ├── GraphMergingService.kt
-│               ├── GraphMergingServiceImpl.kt
-│               └── Metrics.kt
-├── build.gradle.kts           # Gradle build script
-├── LICENSE                    # Project license
-└── NOTICE                     # Dependency license report
-```
 
 ## Building from Source
 
