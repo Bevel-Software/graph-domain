@@ -21,10 +21,12 @@ interface IntermediateFileParser {
     /**
      * Parses a single file and returns a GraphBuilder.
      *
-     * @param pathToFile the path to the Kotlin file.
+     * @param absolutePathToFile the path to the Kotlin file.
      * @return a GraphBuilder.
      */
-    fun parseFile(pathToFile: String): GraphBuilder
+    fun parseFile(absolutePathToFile: String, initialGraph: GraphBuilder? = null): GraphBuilder {
+        return parseFiles(listOf(absolutePathToFile), initialGraph)
+    }
 
     /**
      * Parses a list of files and merges their results into a single [GraphBuilder].
@@ -32,11 +34,11 @@ interface IntermediateFileParser {
      * attempts to parse each one using [parseFile], and logs any errors encountered.
      * Successfully parsed graphs are then folded (merged) into a cumulative [GraphBuilder].
      *
-     * @param files A list of file paths to parse.
+     * @param absoluteFiles A list of file paths to parse.
      * @return A [GraphBuilder] instance containing the combined graph data from all successfully parsed files.
      */
-    fun parseFiles(files: List<String>): GraphBuilder {
-        return files.mapNotNull { file ->
+    fun parseFiles(absoluteFiles: List<String>, initialGraph: GraphBuilder? = null): GraphBuilder {
+        return absoluteFiles.mapNotNull { file ->
             logger.info("Parsing: $file")
             try {
                 parseFile(file)
